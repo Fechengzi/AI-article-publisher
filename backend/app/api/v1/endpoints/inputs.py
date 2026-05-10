@@ -72,3 +72,16 @@ async def get_input(
     if not raw_input or raw_input.user_id != current_user.id:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="输入不存在")
     return raw_input
+
+
+@router.delete("/{input_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_input(
+    input_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> None:
+    """删除素材（级联删除结构化内容、引用它的文章及其发布记录）"""
+    raw_input = await input_crud.get_raw_input(db, input_id)
+    if not raw_input or raw_input.user_id != current_user.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="输入不存在")
+    await input_crud.delete_raw_input(db, input_id)

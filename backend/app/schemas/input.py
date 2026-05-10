@@ -7,6 +7,7 @@ from app.models.raw_input import InputStatus
 
 class RawInputCreate(BaseModel):
     content: str
+    title: str | None = None
 
 
 class StructuredContentRead(BaseModel):
@@ -22,6 +23,7 @@ class RawInputRead(BaseModel):
     model_config = {"from_attributes": True}
 
     id: uuid.UUID
+    title: str | None = None
     content: str
     status: InputStatus
     error_msg: str | None = None
